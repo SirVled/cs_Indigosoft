@@ -1,4 +1,4 @@
-﻿using Indigosoft.Application.Notifications;
+﻿using Indigosoft.Application.Interfaces.Alerting;
 using System;
 using System.Collections.Generic;
 using System.Text;

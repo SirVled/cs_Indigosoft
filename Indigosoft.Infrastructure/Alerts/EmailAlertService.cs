@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Indigosoft.Application.Notifications;
+using Indigosoft.Application.Interfaces.Alerting;
 
 namespace Indigosoft.Infrastructure.Notifications
 {
