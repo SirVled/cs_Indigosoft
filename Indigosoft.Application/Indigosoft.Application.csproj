@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\Sources\" />
-    <Folder Include="Interfaces\Processing\" />
     <Folder Include="Interfaces\Storage\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Indigosoft.Domain\Indigosoft.Domain.csproj" />
   </ItemGroup>
 
 </Project>
