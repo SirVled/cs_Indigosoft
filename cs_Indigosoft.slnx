@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="cs_Indigosoft/cs_Indigosoft.csproj" />
+  <Project Path="Indigosoft.Application/Indigosoft.Application.csproj" />
+  <Project Path="Indigosoft.Domain/Indigosoft.Domain.csproj" />
+  <Project Path="Indigosoft.Infrastructure/Indigosoft.Infrastructure.csproj" />
+</Solution>
