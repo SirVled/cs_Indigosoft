@@ -124,10 +124,10 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
                     ExchangeType.Bybit
                 ));
             }
-            catch
+            catch(Exception ex)
             {
-                Console.WriteLine("Error");
                 // некорректный JSON / не тик — игнорируем
+                Console.WriteLine(ex.Message);
             }
         }
     }
