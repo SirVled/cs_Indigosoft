@@ -41,7 +41,7 @@ namespace Indigosoft.Infrastructure
 
             // sources
             services.AddSingleton<ITickSource, BinanceWsTickSource>();
-            services.AddSingleton<ITickSource, BinanceRestTickSource>();
+           // services.AddSingleton<ITickSource, BinanceRestTickSource>();
 
             services.AddSingleton<ITickSource, BybitWsTickSource>();
             services.Configure<RestSourceOptions>(
