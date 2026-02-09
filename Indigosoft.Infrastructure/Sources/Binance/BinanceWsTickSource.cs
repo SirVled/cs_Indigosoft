@@ -15,7 +15,7 @@ using System.Text.Json;
 namespace Indigosoft.Infrastructure.Sources.Binance
 {
     public sealed class BinanceWsTickSource
-    : WebSocketTickSourceBase, IStoppableSource
+        : WebSocketTickSourceBase, IStoppableSource
     {
         private readonly WebSocketSourceOptions _options;
         private ClientWebSocket? _socket;
