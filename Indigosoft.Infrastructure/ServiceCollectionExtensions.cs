@@ -40,10 +40,21 @@ namespace Indigosoft.Infrastructure
 
             // sources
             services.AddSingleton<ITickSource, BinanceWsTickSource>();
-        //    services.AddSingleton<ITickSource, BinanceRestTickSource>();
+            services.AddSingleton<ITickSource, BinanceRestTickSource>();
 
             services.AddSingleton<ITickSource, BybitWsTickSource>();
-           // services.AddSingleton<ITickSource, BybitRestTickSource>();
+            services.Configure<RestSourceOptions>(
+            "Bybit",
+            configuration.GetSection("Sources:Bybit:Rest"));
+
+            services.AddHttpClient<BybitRestTickSource>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.bybit.com");
+                client.Timeout = TimeSpan.FromSeconds(5);
+            });
+
+
+            services.AddSingleton<ITickSource, BybitRestTickSource>();
 
             services.AddSingleton<IAlertChannel, ConsoleAlertChannel>();
             services.AddSingleton<IAlertChannel, FileAlertChannel>();

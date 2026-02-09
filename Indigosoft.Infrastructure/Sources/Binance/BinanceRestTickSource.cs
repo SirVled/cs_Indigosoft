@@ -14,6 +14,8 @@ namespace Indigosoft.Infrastructure.Sources.Binance
 
         protected override Task<IEnumerable<Tick>> FetchTicksAsync(CancellationToken ct)
         {
+            //Заглушка
+            //см. BybitRestTickSource
             return Task.FromResult<IEnumerable<Tick>>(Array.Empty<Tick>());
         }
     }
