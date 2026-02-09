@@ -1,6 +1,7 @@
 ﻿using Indigosoft.Application.Alerting;
 using Indigosoft.Application.Configuration;
 using Indigosoft.Application.Interfaces.Alerting;
+using Indigosoft.Application.Interfaces.Metrics;
 using Indigosoft.Application.Interfaces.Monitoring;
 using Indigosoft.Application.Interfaces.Processing;
 using Indigosoft.Application.Pipeline;
@@ -31,6 +32,9 @@ namespace Indigosoft.Application
 
             services.AddSingleton<ITickAggregationService, TickAggregationService>();
             services.AddSingleton<ITickProcessor, AggregationProcessor>();
+
+            services.AddSingleton<IMetricsCollector, MetricsCollector>();
+            services.AddSingleton<ITickProcessor, MetricsProcessor>();
 
             #region Alerts
             var rules = configuration

@@ -37,6 +37,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<AggregationFlushHostedService>();
         services.AddHostedService<TickPersistenceHostedService>();
         services.AddHostedService<MarketDataIngestionHostedService>();
+        services.AddHostedService<MetricsHostedService>();
     })
     .Build();
 
