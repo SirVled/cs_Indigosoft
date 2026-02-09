@@ -1,4 +1,5 @@
-﻿using Indigosoft.Domain.Enums;
+﻿using Indigosoft.Application.Interfaces;
+using Indigosoft.Domain.Enums;
 using Indigosoft.Domain.Interfaces;
 using Indigosoft.Domain.Models;
 using Indigosoft.Infrastructure.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,18 +15,49 @@ using System.Text.Json;
 
 namespace Indigosoft.Infrastructure.Sources.Bybit
 {
-    public class BybitWsTickSource : WebSocketTickSourceBase
+    public class BybitWsTickSource : WebSocketTickSourceBase, IStoppableSource
     {
         private readonly WebSocketSourceOptions _options;
-
+        private ClientWebSocket? _socket;       
+        private readonly SemaphoreSlim _closeLock = new(1, 1); // Нужен чтобы не закрыть socket дважды (race-condition)
         public BybitWsTickSource(IOptionsMonitor<WebSocketSourceOptions> options)
         {
             _options = options.Get("Bybit");
         }
+        public async Task StopAsync()
+        {
+            await _closeLock.WaitAsync();
+            try
+            {
+                if (_socket == null)
+                    return;
+
+                if (_socket.State is WebSocketState.Open or WebSocketState.CloseReceived)
+                {
+                    try
+                    {
+                        await _socket.CloseAsync(
+                            WebSocketCloseStatus.NormalClosure,
+                            "Application shutdown",
+                            CancellationToken.None);
+                    }
+                    catch (WebSocketException)
+                    {
+                        // сокет уже мёртв — игнорируем
+                    }
+                }
+
+                _socket.Dispose();
+                _socket = null;
+            }
+            finally
+            {
+                _closeLock.Release();
+            }
+        }
         public override async IAsyncEnumerable<Tick> StreamAsync(
             [EnumeratorCancellation] CancellationToken ct)
         {
-            Console.WriteLine("🌐 Bybit StreamAsync started");
             _ = Task.Run(() => ConnectAsync(ct), ct);
 
             await foreach (var tick in base.StreamAsync(ct))
@@ -33,16 +66,15 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
 
         public async Task ConnectAsync(CancellationToken ct)
         {
-            Console.WriteLine("🌐 Bybit WS connecting...");
             while (!ct.IsCancellationRequested)
             {
                 try
                 {
-                    using var socket = new ClientWebSocket();
-                    await socket.ConnectAsync(new Uri(_options.Url), ct);
+                    _socket = new ClientWebSocket();
+                    await _socket.ConnectAsync(new Uri(_options.Url), ct);
 
-                    await SubscribeAsync(socket, ct);
-                    await ReceiveLoopAsync(socket, ct);
+                    await SubscribeAsync(_socket, ct);
+                    await ReceiveLoopAsync(_socket, ct);
                 }
                 catch (OperationCanceledException)
                 {
@@ -50,7 +82,6 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
                 }
                 catch
                 {
-                    //TODO логирование
                     await Task.Delay(
                         TimeSpan.FromSeconds(_options.ReconnectDelaySeconds), ct);
                 }
@@ -58,6 +89,7 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
 
             Complete();
         }
+
 
         private async Task SubscribeAsync(ClientWebSocket socket, CancellationToken ct)
         {

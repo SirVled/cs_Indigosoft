@@ -15,9 +15,9 @@ namespace cs_Indigosoft.HostedServices
             _ingestion = ingestion;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return _ingestion.RunAsync(stoppingToken);
+            await _ingestion.RunAsync(stoppingToken);
         }
     }
 }

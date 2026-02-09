@@ -34,10 +34,25 @@ namespace Indigosoft.Application.Services
 
         public async Task RunAsync(CancellationToken ct)
         {
-            await foreach (var tick in _channel.Reader.ReadAllAsync(ct))
+            try
             {
-                await _pipeline.ProcessAsync(tick, ct);
+                await foreach (var tick in _channel.Reader.ReadAllAsync(ct))
+                {
+                    await _pipeline.ProcessAsync(tick, ct);
+                }
             }
+            catch (OperationCanceledException)
+            {
+                
+            }
+        }
+
+        /// <summary>
+        /// Запрещает приём новых тиков и инициирует завершение reader'а.
+        /// </summary>
+        public void Complete()
+        {
+            _channel.Writer.TryComplete();
         }
     }
 }
