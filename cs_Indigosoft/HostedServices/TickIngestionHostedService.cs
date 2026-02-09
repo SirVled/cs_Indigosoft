@@ -17,7 +17,6 @@ namespace cs_Indigosoft.HostedServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine("🚚 Tick ingestion consumer started");
             return _ingestion.RunAsync(stoppingToken);
         }
     }

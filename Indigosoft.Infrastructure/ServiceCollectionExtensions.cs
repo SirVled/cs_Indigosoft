@@ -1,5 +1,7 @@
-﻿using Indigosoft.Domain.Interfaces;
+﻿using Indigosoft.Application.Interfaces.Alerting;
+using Indigosoft.Domain.Interfaces;
 using Indigosoft.Infrastructure.Configuration;
+using Indigosoft.Infrastructure.Notifications;
 using Indigosoft.Infrastructure.Sources.Binance;
 using Indigosoft.Infrastructure.Sources.Bybit;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +40,10 @@ namespace Indigosoft.Infrastructure
 
             services.AddSingleton<ITickSource, BybitWsTickSource>();
             services.AddSingleton<ITickSource, BybitRestTickSource>();
+
+            services.AddSingleton<IAlertChannel, ConsoleAlertChannel>();
+            services.AddSingleton<IAlertChannel, FileAlertChannel>();
+            services.AddSingleton<IAlertChannel, EmailAlertChannel>();
 
             return services;
         }

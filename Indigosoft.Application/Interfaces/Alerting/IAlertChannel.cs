@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Indigosoft.Application.Interfaces.Alerting
 {
-    public interface IAlertService
+    public interface IAlertChannel
     {
-        public Task HandleAsync(Alert alert, CancellationToken ct);
+        Task SendAsync(Alert alert, CancellationToken ct);
     }
 }
