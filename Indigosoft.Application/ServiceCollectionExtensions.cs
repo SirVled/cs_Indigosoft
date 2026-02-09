@@ -20,7 +20,7 @@ namespace Indigosoft.Application
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            //Синглтоны - потому что консольное приложение
+
             services.AddSingleton<ITickProcessor, DeduplicationProcessor>();
             services.AddSingleton<ITickPipeline, TickPipeline>();
 

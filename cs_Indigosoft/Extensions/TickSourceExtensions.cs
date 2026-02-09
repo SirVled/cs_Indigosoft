@@ -14,10 +14,15 @@ namespace cs_Indigosoft.Extensions
             ChannelWriter<Tick> writer,
             CancellationToken ct)
         {
-            await foreach (var tick in source.StreamAsync(ct))
+            try
             {
-                await writer.WriteAsync(tick, ct);
+                await foreach (var tick in source.StreamAsync(ct))
+                {
+                    await writer.WriteAsync(tick);
+                }
             }
+            catch (OperationCanceledException) { }
+            catch (ChannelClosedException) { }
         }
     }
 }

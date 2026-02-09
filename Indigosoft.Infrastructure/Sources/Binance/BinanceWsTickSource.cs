@@ -76,11 +76,33 @@ namespace Indigosoft.Infrastructure.Sources.Binance
 
             var bytes = Encoding.UTF8.GetBytes(payload);
 
-            await _socket!.SendAsync(
-                bytes,
-                WebSocketMessageType.Text,
-                endOfMessage: true,
-                cancellationToken: ct);
+            await SendAsync(bytes, ct);
+        }
+
+        private async Task SendAsync(
+            ReadOnlyMemory<byte> bytes,
+            CancellationToken ct)
+        {
+            var socket = _socket;
+            if (socket == null)
+                return;
+
+            try
+            {
+                await socket.SendAsync(
+                    bytes,
+                    WebSocketMessageType.Text,
+                    endOfMessage: true,
+                    cancellationToken: ct);
+            }
+            catch (OperationCanceledException)
+            {
+                // shutdown
+            }
+            catch (WebSocketException)
+            {
+                // reconnect
+            }
         }
 
         private async Task ReceiveLoopAsync(CancellationToken ct)

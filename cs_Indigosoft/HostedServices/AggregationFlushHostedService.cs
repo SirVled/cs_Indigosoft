@@ -39,6 +39,7 @@ namespace cs_Indigosoft.HostedServices
                     await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
                 }
             }
+            catch (OperationCanceledException) { }
             finally
             {
                 await FlushAsync(CancellationToken.None);

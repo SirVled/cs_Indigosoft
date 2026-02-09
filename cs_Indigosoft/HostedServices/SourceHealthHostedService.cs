@@ -18,16 +18,20 @@ namespace cs_Indigosoft.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                foreach (ExchangeType exchange in Enum.GetValues(typeof(ExchangeType)))
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    var state = _monitor.GetState(exchange);
-                    Console.WriteLine($"[{DateTime.UtcNow:O}] {exchange}: {state}");
-                }
+                    foreach (ExchangeType exchange in Enum.GetValues(typeof(ExchangeType)))
+                    {
+                        var state = _monitor.GetState(exchange);
+                        Console.WriteLine($"[{DateTime.UtcNow:O}] {exchange}: {state}");
+                    }
 
-                await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
+                }
             }
+            catch (OperationCanceledException) { }
         }
     }
 }

@@ -17,23 +17,27 @@ namespace cs_Indigosoft.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                var snapshot = _metrics.SnapshotAndReset();
-
-                Console.WriteLine(
-                    $"[METRICS] TPS={snapshot.TicksPerSecond:F1} " +
-                    $"AvgLag={snapshot.AvgLag.TotalMilliseconds:F0}ms " +
-                    $"MaxLag={snapshot.MaxLag.TotalMilliseconds:F0}ms " +
-                    $"AvgProc={snapshot.AvgProcessingTime.TotalMicroseconds:F1}μs");
-
-                foreach (var kv in snapshot.TicksByExchange)
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    Console.WriteLine($"  {kv.Key}: {kv.Value}");
-                }
+                    var snapshot = _metrics.SnapshotAndReset();
 
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                    Console.WriteLine(
+                        $"[METRICS] TPS={snapshot.TicksPerSecond:F1} " +
+                        $"AvgLag={snapshot.AvgLag.TotalMilliseconds:F0}ms " +
+                        $"MaxLag={snapshot.MaxLag.TotalMilliseconds:F0}ms " +
+                        $"AvgProc={snapshot.AvgProcessingTime.TotalMicroseconds:F1}μs");
+
+                    foreach (var kv in snapshot.TicksByExchange)
+                    {
+                        Console.WriteLine($"  {kv.Key}: {kv.Value}");
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                }
             }
+            catch (OperationCanceledException){}
         }
     }
 }

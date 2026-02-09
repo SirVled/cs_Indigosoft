@@ -38,13 +38,12 @@ namespace Indigosoft.Infrastructure
                 .Bind(configuration.GetSection("Sources:Bybit:Rest"));
             #endregion
 
-            //Синглтоны - потому что консольное приложение
             // sources
             services.AddSingleton<ITickSource, BinanceWsTickSource>();
-            services.AddSingleton<ITickSource, BinanceRestTickSource>();
+        //    services.AddSingleton<ITickSource, BinanceRestTickSource>();
 
             services.AddSingleton<ITickSource, BybitWsTickSource>();
-            services.AddSingleton<ITickSource, BybitRestTickSource>();
+           // services.AddSingleton<ITickSource, BybitRestTickSource>();
 
             services.AddSingleton<IAlertChannel, ConsoleAlertChannel>();
             services.AddSingleton<IAlertChannel, FileAlertChannel>();

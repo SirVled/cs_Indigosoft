@@ -14,9 +14,9 @@ namespace Indigosoft.Infrastructure.Sources
 
         public virtual async IAsyncEnumerable<Tick> StreamAsync(
             [System.Runtime.CompilerServices.EnumeratorCancellation]
-        CancellationToken ct)
+        CancellationToken _)
         {
-            await foreach (var tick in _channel.Reader.ReadAllAsync(ct))
+            await foreach (var tick in _channel.Reader.ReadAllAsync())
                 yield return tick;
         }
 
