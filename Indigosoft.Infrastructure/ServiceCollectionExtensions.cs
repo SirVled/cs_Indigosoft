@@ -1,4 +1,5 @@
-﻿using Indigosoft.Infrastructure.Configuration;
+﻿using Indigosoft.Domain.Interfaces;
+using Indigosoft.Infrastructure.Configuration;
 using Indigosoft.Infrastructure.Sources.Binance;
 using Indigosoft.Infrastructure.Sources.Bybit;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +33,11 @@ namespace Indigosoft.Infrastructure
 
             //Синглтоны - потому что консольное приложение
             // sources
-            services.AddSingleton<BinanceWsTickSource>();
-            services.AddSingleton<BinanceRestTickSource>();
-            services.AddSingleton<BybitWsTickSource>();
-            services.AddSingleton<BybitRestTickSource>();
+            services.AddSingleton<ITickSource, BinanceWsTickSource>();
+            services.AddSingleton<ITickSource, BinanceRestTickSource>();
+
+            services.AddSingleton<ITickSource, BybitWsTickSource>();
+            services.AddSingleton<ITickSource, BybitRestTickSource>();
 
             return services;
         }

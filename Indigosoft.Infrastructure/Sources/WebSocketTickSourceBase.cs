@@ -12,7 +12,7 @@ namespace Indigosoft.Infrastructure.Sources
         private readonly Channel<Tick> _channel =
             Channel.CreateUnbounded<Tick>();
 
-        public async IAsyncEnumerable<Tick> StreamAsync(
+        public virtual async IAsyncEnumerable<Tick> StreamAsync(
             [System.Runtime.CompilerServices.EnumeratorCancellation]
         CancellationToken ct)
         {

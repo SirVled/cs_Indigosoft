@@ -14,7 +14,7 @@ namespace Indigosoft.Application.Pipeline
         public ValueTask<Tick?> ProcessAsync(Tick tick, CancellationToken ct)
         {
             var key = $"{tick.Exchange}:{tick.Symbol}:{tick.Timestamp:O}";
-
+            Console.WriteLine($"{_seen.Count} {tick.Price}");
             return _seen.TryAdd(key, tick.Timestamp)
                 ? ValueTask.FromResult<Tick?>(tick)
                 : ValueTask.FromResult<Tick?>(null);

@@ -5,7 +5,9 @@ using Indigosoft.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
@@ -19,8 +21,19 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
         {
             _options = options.Get("Bybit");
         }
+        public override async IAsyncEnumerable<Tick> StreamAsync(
+            [EnumeratorCancellation] CancellationToken ct)
+        {
+            Console.WriteLine("🌐 Bybit StreamAsync started");
+            _ = Task.Run(() => ConnectAsync(ct), ct);
+
+            await foreach (var tick in base.StreamAsync(ct))
+                yield return tick;
+        }
+
         public async Task ConnectAsync(CancellationToken ct)
         {
+            Console.WriteLine("🌐 Bybit WS connecting...");
             while (!ct.IsCancellationRequested)
             {
                 try
@@ -96,8 +109,8 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
                 var data = root.GetProperty("data");
 
                 var symbol = data.GetProperty("symbol").GetString()!;
-                var price = data.GetProperty("lastPrice").GetDecimal();
-                var volume = data.GetProperty("volume24h").GetDecimal();
+                var price = decimal.Parse(data.GetProperty("lastPrice").GetString()!, CultureInfo.InvariantCulture);
+                var volume = decimal.Parse(data.GetProperty("volume24h").GetString()!, CultureInfo.InvariantCulture);
                 var ts = DateTimeOffset
                     .FromUnixTimeMilliseconds(
                         root.GetProperty("ts").GetInt64())
@@ -113,6 +126,7 @@ namespace Indigosoft.Infrastructure.Sources.Bybit
             }
             catch
             {
+                Console.WriteLine("Error");
                 // некорректный JSON / не тик — игнорируем
             }
         }

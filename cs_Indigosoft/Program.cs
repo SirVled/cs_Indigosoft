@@ -1,4 +1,5 @@
 ﻿
+using cs_Indigosoft.HostedServices;
 using Indigosoft.Application;
 using Indigosoft.Application.Services;
 using Indigosoft.Infrastructure;
@@ -22,7 +23,10 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services
             .AddApplication()
-            .AddInfrastructure(context.Configuration);  
+            .AddInfrastructure(context.Configuration);
+
+        services.AddHostedService<SourcesHostedService>();
+        services.AddHostedService<TickIngestionHostedService>();
     })
     .Build();
 

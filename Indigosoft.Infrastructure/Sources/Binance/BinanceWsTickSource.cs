@@ -10,10 +10,6 @@ namespace Indigosoft.Infrastructure.Sources.Binance
     {
         public Task ConnectAsync(CancellationToken ct)
         {
-            // TODO:
-            // 1. открыть WS
-            // 2. подписаться
-            // 3. в OnMessage -> Publish(tick)
             return Task.CompletedTask;
         }
     }
