@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Indigosoft.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace Indigosoft.Domain.Entities
          decimal High,
          decimal Low,
          decimal Close,
-         decimal Volume
+         decimal Volume,
+         ExchangeType Exchange
      );
 }

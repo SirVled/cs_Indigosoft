@@ -1,11 +1,16 @@
 ﻿using Indigosoft.Application.Interfaces.Alerting;
+using Indigosoft.Application.Interfaces.Storage;
 using Indigosoft.Domain.Interfaces;
 using Indigosoft.Infrastructure.Configuration;
 using Indigosoft.Infrastructure.Notifications;
+using Indigosoft.Infrastructure.Persistence.SQLite;
+using Indigosoft.Infrastructure.Persistence.SQLite.Repository;
 using Indigosoft.Infrastructure.Sources.Binance;
 using Indigosoft.Infrastructure.Sources.Bybit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 
 namespace Indigosoft.Infrastructure
@@ -44,6 +49,19 @@ namespace Indigosoft.Infrastructure
             services.AddSingleton<IAlertChannel, ConsoleAlertChannel>();
             services.AddSingleton<IAlertChannel, FileAlertChannel>();
             services.AddSingleton<IAlertChannel, EmailAlertChannel>();
+
+
+            services.AddDbContext<MarketDataDbContext>(o =>
+            {
+                var dbPath = Path.Combine(
+                    AppContext.BaseDirectory,
+                    "marketdata.db");
+
+                o.UseSqlite($"Data Source={dbPath}");
+            });
+
+            services.AddScoped<ITickRepository, TickRepository>();
+            services.AddScoped<ICandleRepository, CandleRepository>();
 
             return services;
         }

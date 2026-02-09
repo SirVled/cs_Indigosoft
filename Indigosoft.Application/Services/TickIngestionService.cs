@@ -30,6 +30,7 @@ namespace Indigosoft.Application.Services
         }
 
         public ChannelWriter<Tick> Writer => _channel.Writer;
+        public ChannelReader<Tick> Reader => _channel.Reader;
 
         public async Task RunAsync(CancellationToken ct)
         {

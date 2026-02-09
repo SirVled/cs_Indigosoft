@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Indigosoft.Application.Interfaces.Storage
 {
-    public interface ITickStorage
+    public interface ITickRepository
     {
-        ValueTask SaveAsync(Tick tick, CancellationToken ct);
+        Task AddAsync(Tick tick, CancellationToken ct);
     }
 }

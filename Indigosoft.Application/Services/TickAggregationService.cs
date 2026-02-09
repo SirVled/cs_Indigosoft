@@ -28,7 +28,7 @@ namespace Indigosoft.Application.Services
 
                 var builder = _active.GetOrAdd(
                     key,
-                    _ => new CandleBuilder(tick.Symbol, periodStart, interval)
+                    _ => new CandleBuilder(tick.Symbol, periodStart, interval, tick.Exchange)
                 );
 
                 builder.Add(tick);

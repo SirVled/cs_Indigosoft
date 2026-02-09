@@ -1,4 +1,5 @@
 ﻿using Indigosoft.Domain.Entities;
+using Indigosoft.Domain.Enums;
 using Indigosoft.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,16 @@ namespace Indigosoft.Application.Services
         public decimal Low { get; private set; }
         public decimal Close { get; private set; }
         public decimal Volume { get; private set; }
+        public ExchangeType Exchange { get; private set; }
 
         private bool _initialized;
 
-        public CandleBuilder(string symbol, DateTime periodStart, TimeSpan interval)
+        public CandleBuilder(string symbol, DateTime periodStart, TimeSpan interval, ExchangeType exchange)
         {
             Symbol = symbol;
             PeriodStart = periodStart;
             Interval = interval;
+            Exchange = exchange;
         }
 
         public void Add(Tick tick)
@@ -45,6 +48,6 @@ namespace Indigosoft.Application.Services
         }
 
         public AggregatedCandle Build() =>
-            new(Symbol, PeriodStart, Interval, Open, High, Low, Close, Volume);
+            new(Symbol, PeriodStart, Interval, Open, High, Low, Close, Volume, Exchange);
     }
 }
