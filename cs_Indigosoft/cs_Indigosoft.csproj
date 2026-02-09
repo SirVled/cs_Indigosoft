@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Indigosoft.Application\Indigosoft.Application.csproj" />
     <ProjectReference Include="..\Indigosoft.Infrastructure\Indigosoft.Infrastructure.csproj" />
   </ItemGroup>
 

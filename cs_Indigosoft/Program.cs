@@ -1,19 +1,29 @@
-﻿using Indigosoft.Application.Providers;
-using Indigosoft.Infrastructure.Provider.Rest;
-using Indigosoft.Infrastructure.Provider.WS;
+﻿
+using Indigosoft.Application;
+using Indigosoft.Application.Services;
+using Indigosoft.Infrastructure;
+using Indigosoft.Infrastructure.Configuration;
+using Indigosoft.Infrastructure.Sources;
+using Indigosoft.Infrastructure.Sources.Binance;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-//var pipeline = new TickPipeline(processor);
 
-var sources = new IMarketDataProvider[]
+using var cts = new CancellationTokenSource();
+
+Console.CancelKeyPress += (_, e) =>
 {
-    new BinanceRestProvider(),
-    new BybitRestProvider(),
-    new BinanceSocketProvider(),
-    new BybitSocketProvider()
+    e.Cancel = true;
+    cts.Cancel();
 };
 
-Task.WhenAll(
-  //  pipeline.StartAsync(ct),
-    sources.Select(s => s.StartAsync(ct)),
- //   aggregationFlushService.StartAsync(ct)
-);
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        services
+            .AddApplication()
+            .AddInfrastructure(context.Configuration);  
+    })
+    .Build();
+
+await host.RunAsync();
