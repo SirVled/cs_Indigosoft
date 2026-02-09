@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\Sources\" />
-    <Folder Include="Interfaces\Storage\" />
   </ItemGroup>
 
   <ItemGroup>

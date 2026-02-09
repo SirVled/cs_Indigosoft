@@ -29,6 +29,8 @@ namespace Indigosoft.Application
             services.AddSingleton<IAlertService, AlertService>();
             services.AddSingleton<ITickProcessor, AlertingProcessor>();
 
+            services.AddSingleton<ITickAggregationService, TickAggregationService>();
+            services.AddSingleton<ITickProcessor, AggregationProcessor>();
 
             #region Alerts
             var rules = configuration

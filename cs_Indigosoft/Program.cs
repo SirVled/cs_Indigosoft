@@ -31,6 +31,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<SourcesHostedService>();
         services.AddHostedService<TickIngestionHostedService>();
         services.AddHostedService<SourceHealthHostedService>();
+        services.AddHostedService<AggregationFlushHostedService>();
 
     })
     .Build();
