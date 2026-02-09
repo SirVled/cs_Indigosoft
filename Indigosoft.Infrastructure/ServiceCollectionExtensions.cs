@@ -7,6 +7,7 @@ using Indigosoft.Infrastructure.Persistence.SQLite;
 using Indigosoft.Infrastructure.Persistence.SQLite.Repository;
 using Indigosoft.Infrastructure.Sources.Binance;
 using Indigosoft.Infrastructure.Sources.Bybit;
+using Indigosoft.Infrastructure.Sources.Okx;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,13 +54,19 @@ namespace Indigosoft.Infrastructure
                 client.Timeout = TimeSpan.FromSeconds(5);
             });
 
-
             services.AddSingleton<ITickSource, BybitRestTickSource>();
 
+            services.Configure<WebSocketSourceOptions>(
+            "Okx",
+            configuration.GetSection("Sources:Okx:WebSocket"));
+
+            services.AddSingleton<ITickSource, OkxWsTickSource>();
+
+            #region Alerts
             services.AddSingleton<IAlertChannel, ConsoleAlertChannel>();
             services.AddSingleton<IAlertChannel, FileAlertChannel>();
             services.AddSingleton<IAlertChannel, EmailAlertChannel>();
-
+            #endregion
 
             services.AddDbContext<MarketDataDbContext>(o =>
             {
