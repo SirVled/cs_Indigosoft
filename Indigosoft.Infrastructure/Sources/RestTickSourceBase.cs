@@ -13,9 +13,11 @@ namespace Indigosoft.Infrastructure.Sources
         {
         }
 
-        public IAsyncEnumerable<Tick> StreamAsync(CancellationToken cancellationToken)
+        public async IAsyncEnumerable<Tick> StreamAsync(
+           [System.Runtime.CompilerServices.EnumeratorCancellation]
+            CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            yield break;
         }
 
         protected abstract Task<IEnumerable<Tick>> FetchTicksAsync(CancellationToken ct);
